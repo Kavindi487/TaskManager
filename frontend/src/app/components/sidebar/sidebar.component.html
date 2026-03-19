@@ -1,3 +1,23 @@
 <aside class="sidebar">
-  <div class="logo">TaskManager</div>
+  <div class="logo-area">
+    <div class="logo-icon">✓</div>
+    <div class="logo-text">
+      <span class="logo-name">TaskManager</span>
+    </div>
+  </div>
+
+  <nav class="nav-links">
+    <a *ngFor="let item of navItems"
+       class="nav-item"
+       [class.active]="item.active">
+      <span class="nav-icon">{{ item.icon }}</span>
+      <span class="nav-label">{{ item.label }}</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="new-project-btn">
+      <span>+</span> New Project
+    </button>
+  </div>
 </aside>

@@ -1,3 +1,55 @@
 <div class="tasks-page">
-  <h1>My Tasks</h1>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="tab-group">
+      <button class="tab active">All Tasks</button>
+      <button class="tab">Assigned to me</button>
+      <button class="tab">Flagged</button>
+    </div>
+    <div class="toolbar-right">
+      <div class="filter-wrapper">
+        <select class="filter-select" (change)="onFilterChange($any($event.target).value || null)">
+          <option value="">☰ Filter: All Status</option>
+          <option value="TO_DO">TO_DO</option>
+          <option value="IN_PROGRESS">IN_PROGRESS</option>
+          <option value="DONE">DONE</option>
+        </select>
+      </div>
+      <button class="btn-add-task" (click)="openCreateModal()">
+        + Add Task
+      </button>
+    </div>
+  </div>
+
+  <!-- Task list or empty state -->
+  <div class="content-area">
+    <app-empty-state
+      *ngIf="filteredTasks.length === 0"
+      (addTask)="openCreateModal()">
+    </app-empty-state>
+
+    <app-task-list
+      *ngIf="filteredTasks.length > 0"
+      [tasks]="filteredTasks"
+      (editTask)="openEditModal($event)"
+      (deleteTask)="openDeleteModal($event)">
+    </app-task-list>
+  </div>
+
 </div>
+
+<!-- Modals -->
+<app-task-form-modal
+  *ngIf="showFormModal"
+  [task]="selectedTask"
+  (save)="onSaveTask($event)"
+  (cancel)="showFormModal = false">
+</app-task-form-modal>
+
+<app-delete-confirm-modal
+  *ngIf="showDeleteModal && taskToDelete"
+  [task]="taskToDelete!"
+  (confirm)="onConfirmDelete()"
+  (cancel)="showDeleteModal = false">
+</app-delete-confirm-modal>

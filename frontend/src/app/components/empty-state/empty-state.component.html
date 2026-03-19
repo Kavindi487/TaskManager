@@ -1,0 +1,39 @@
+<div class="empty-state">
+  <div class="empty-illustration">
+    <div class="illustration-bg">
+      <div class="illustration-card">
+        <span class="illustration-icon">📋+</span>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="empty-title">No tasks yet.</h2>
+  <p class="empty-subtitle">
+    Your workspace is currently a blank canvas. Start by creating
+    your first task to begin your productive journey!
+  </p>
+
+  <div class="empty-actions">
+    <button class="btn-add" (click)="addTask.emit()">
+      <span>+</span> Add Task
+    </button>
+  </div>
+
+  <div class="feature-cards">
+    <div class="feature-card">
+      <span class="feature-icon">⚡</span>
+      <h4>Quick Start</h4>
+      <p>Hit <kbd>Ctrl + N</kbd> to instantly create a new task.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">✦</span>
+      <h4>Smart Categorization</h4>
+      <p>Use status filters to automatically prioritize your focus zone.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">⇄</span>
+      <h4>Team Sync</h4>
+      <p>Invite collaborators to see your progress in real-time updates.</p>
+    </div>
+  </div>
+</div>

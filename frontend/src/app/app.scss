@@ -2,10 +2,13 @@
   display: flex;
   height: 100vh;
   background: var(--surface);
+  overflow: hidden;
 }
+
 .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: var(--surface);
 }

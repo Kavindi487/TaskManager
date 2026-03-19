@@ -1,0 +1,19 @@
+.task-list {
+  width: 100%;
+}
+
+.list-header {
+  display: grid;
+  grid-template-columns: 40px 1fr 160px 140px 80px;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--on-surface-variant);
+  margin-bottom: 0.5rem;
+}
+
+.col-details  { }
+.col-status   { }
+.col-date     { }
+.col-actions  { text-align: right; }

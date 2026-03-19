@@ -8,4 +8,11 @@ import { CommonModule } from '@angular/common';
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent {}
+export class SidebarComponent {
+  navItems = [
+    { label: 'Dashboard', icon: '⊞' },
+    { label: 'My Tasks',  icon: '✓', active: true },
+    { label: 'Completed', icon: '◉' },
+    { label: 'Settings',  icon: '⚙' },
+  ];
+}

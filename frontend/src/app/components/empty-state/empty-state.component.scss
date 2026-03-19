@@ -1,0 +1,122 @@
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.empty-illustration {
+  margin-bottom: 2rem;
+}
+
+.illustration-bg {
+  width: 180px;
+  height: 180px;
+  background: var(--surface-container-high);
+  border-radius: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.illustration-card {
+  width: 80px;
+  height: 80px;
+  background: var(--surface-container-lowest);
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+}
+
+.illustration-icon {
+  font-size: 2rem;
+}
+
+.empty-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 0.75rem;
+}
+
+.empty-subtitle {
+  font-size: 0.95rem;
+  color: var(--on-surface-variant);
+  max-width: 420px;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.empty-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.btn-add {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  background: linear-gradient(135deg, var(--primary), var(--primary-container));
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+
+  &:hover { opacity: 0.9; }
+}
+
+.feature-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  width: 100%;
+  max-width: 700px;
+}
+
+.feature-card {
+  background: var(--surface-container-lowest);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  text-align: left;
+  box-shadow: var(--shadow);
+}
+
+.feature-icon {
+  font-size: 1.25rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+.feature-card h4 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--on-surface);
+  margin-bottom: 0.4rem;
+}
+
+.feature-card p {
+  font-size: 0.8rem;
+  color: var(--on-surface-variant);
+  line-height: 1.5;
+}
+
+kbd {
+  background: var(--surface-container-high);
+  border-radius: 4px;
+  padding: 0.1rem 0.35rem;
+  font-size: 0.75rem;
+  font-family: monospace;
+}
