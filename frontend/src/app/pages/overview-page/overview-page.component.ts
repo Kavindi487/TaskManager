@@ -35,6 +35,10 @@ export class OverviewPageComponent implements OnInit {
     });
   }
 
+  get firstName(): string {
+    return this.user?.name?.split(' ')[0] ?? '';
+  }
+
   get totalCount()    { return this.tasks.length; }
   get todoCount()     { return this.tasks.filter(t => t.status === TaskStatus.TO_DO).length; }
   get progressCount() { return this.tasks.filter(t => t.status === TaskStatus.IN_PROGRESS).length; }

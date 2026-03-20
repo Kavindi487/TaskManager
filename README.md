@@ -148,3 +148,21 @@ All task endpoints require `Authorization: Bearer <token>` header.
 GitHub Actions runs on every push/PR to `main`:
 - **Backend job**: `mvn clean verify` with JDK 17
 - **Frontend job**: `npm ci && npm run build`
+
+
+## Test Credentials
+
+Register a new account at `http://localhost:4200/signup` or use these pre-created credentials (after running the app once and registering):
+
+| Field    | Value                      |
+|----------|----------------------------|
+| Email    | test@taskmanager.com       |
+| Password | test123                    |
+
+> If the above account doesn't exist yet, register it manually on first run — the app auto-creates the database tables on startup.
+
+## JWT Info
+
+- Tokens are valid for **24 hours** (configured via `APP_JWT_EXPIRATION_MS=86400000`)
+- The token is stored in `localStorage` under the key `tm_token`
+- All `/api/tasks` endpoints require `Authorization: Bearer <token>` — handled automatically by the Angular interceptor
