@@ -43,15 +43,15 @@ export class TasksPageComponent implements OnInit {
   }
 
   get todoCount(): number {
-    return this.tasks.filter(task => task.status === TaskStatus.TO_DO).length;
+    return this.tasks.filter(t => t.status === TaskStatus.TO_DO).length;
   }
 
   get progressCount(): number {
-    return this.tasks.filter(task => task.status === TaskStatus.IN_PROGRESS).length;
+    return this.tasks.filter(t => t.status === TaskStatus.IN_PROGRESS).length;
   }
 
   get doneCount(): number {
-    return this.tasks.filter(task => task.status === TaskStatus.DONE).length;
+    return this.tasks.filter(t => t.status === TaskStatus.DONE).length;
   }
 
   loadTasks() {
@@ -73,6 +73,12 @@ export class TasksPageComponent implements OnInit {
 
   onFilterChange(value: TaskStatus | null) {
     this.selectedFilter = value;
+    // Optimistic client-side filter while API loads
+    if (value === null) {
+      this.filteredTasks = this.tasks;
+    } else {
+      this.filteredTasks = this.tasks.filter(t => t.status === value);
+    }
     this.loadTasks();
   }
 
@@ -92,32 +98,60 @@ export class TasksPageComponent implements OnInit {
   }
 
   onSaveTask(data: { title: string; description: string; status: TaskStatus }) {
-    const request$ = this.selectedTask
-      ? this.taskService.update(this.selectedTask.id, data)
-      : this.taskService.create(data);
-
-    request$.subscribe({
-      next: () => {
-        this.showFormModal = false;
-        this.loadTasks();
-      },
-      error: (error: HttpErrorResponse) => {
-        this.errorMessage = error.error?.message || 'Failed to save task.';
+    if (this.selectedTask) {
+      // Optimistic update
+      const idx = this.tasks.findIndex(t => t.id === this.selectedTask!.id);
+      if (idx !== -1) {
+        this.tasks[idx] = { ...this.tasks[idx], ...data };
+        this.filteredTasks = this.selectedFilter
+          ? this.tasks.filter(t => t.status === this.selectedFilter)
+          : [...this.tasks];
       }
-    });
+      this.showFormModal = false;
+
+      this.taskService.update(this.selectedTask.id, data).subscribe({
+        next: (updated) => {
+          const i = this.tasks.findIndex(t => t.id === updated.id);
+          if (i !== -1) this.tasks[i] = updated;
+          this.filteredTasks = this.selectedFilter
+            ? this.tasks.filter(t => t.status === this.selectedFilter)
+            : [...this.tasks];
+        },
+        error: (error: HttpErrorResponse) => {
+          this.errorMessage = error.error?.message || 'Failed to update task.';
+          this.loadTasks(); // rollback
+        }
+      });
+    } else {
+      this.taskService.create(data).subscribe({
+        next: (created) => {
+          this.tasks.unshift(created);
+          this.filteredTasks = this.selectedFilter
+            ? this.tasks.filter(t => t.status === this.selectedFilter)
+            : [...this.tasks];
+          this.showFormModal = false;
+        },
+        error: (error: HttpErrorResponse) => {
+          this.errorMessage = error.error?.message || 'Failed to create task.';
+        }
+      });
+    }
   }
 
   onConfirmDelete() {
     if (!this.taskToDelete) return;
+    const id = this.taskToDelete.id;
 
-    this.taskService.delete(this.taskToDelete.id).subscribe({
-      next: () => {
-        this.showDeleteModal = false;
-        this.taskToDelete = null;
-        this.loadTasks();
-      },
+    // Optimistic delete
+    this.tasks = this.tasks.filter(t => t.id !== id);
+    this.filteredTasks = this.filteredTasks.filter(t => t.id !== id);
+    this.showDeleteModal = false;
+    this.taskToDelete = null;
+
+    this.taskService.delete(id).subscribe({
       error: (error: HttpErrorResponse) => {
         this.errorMessage = error.error?.message || 'Failed to delete task.';
+        this.loadTasks(); // rollback
       }
     });
   }

@@ -1,50 +1,60 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl
+} from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+
+function passwordMatch(group: AbstractControl) {
+  const pw = group.get('password')?.value;
+  const confirm = group.get('confirm')?.value;
+  return pw === confirm ? null : { passwordMismatch: true };
+}
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })
 export class SignupComponent {
-  name = '';
-  email = '';
-  password = '';
-  confirm = '';
+  signupForm: FormGroup;
   error = '';
   isSubmitting = false;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router
+  ) {
+    this.signupForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirm: ['', Validators.required]
+    }, { validators: passwordMatch });
+  }
+
+  get nameCtrl() { return this.signupForm.get('name')!; }
+  get emailCtrl() { return this.signupForm.get('email')!; }
+  get passwordCtrl() { return this.signupForm.get('password')!; }
+  get confirmCtrl() { return this.signupForm.get('confirm')!; }
 
   submit() {
-    if (!this.name || !this.email || !this.password || !this.confirm) {
-      this.error = 'Please fill in all fields.';
+    if (this.signupForm.invalid) {
+      this.signupForm.markAllAsTouched();
       return;
     }
-
-    if (this.password.length < 6) {
-      this.error = 'Password must be at least 6 characters.';
-      return;
-    }
-
-    if (this.password !== this.confirm) {
-      this.error = 'Passwords do not match.';
-      return;
-    }
-
     this.isSubmitting = true;
     this.error = '';
-
-    this.auth.signup({
-      name: this.name.trim(),
-      email: this.email.trim(),
-      password: this.password
-    }).subscribe({
+    const { name, email, password } = this.signupForm.value;
+    this.auth.signup({ name, email, password }).subscribe({
       next: () => {
         this.isSubmitting = false;
         this.router.navigate(['/tasks']);

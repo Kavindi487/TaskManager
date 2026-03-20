@@ -196,3 +196,19 @@
     &:hover { color: var(--primary); }
   }
 }
+
+.field-error {
+  display: block;
+  font-size: 0.75rem;
+  color: #e53935;
+  margin-top: 0.3rem;
+}
+
+.input-error {
+  border: 1.5px solid #e53935 !important;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

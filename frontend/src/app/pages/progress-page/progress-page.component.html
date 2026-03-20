@@ -1,0 +1,118 @@
+<div class="progress-page">
+  <header class="page-header">
+    <div>
+      <h1 class="page-title">Progress</h1>
+      <p class="page-subtitle">Track where every task stands right now.</p>
+    </div>
+  </header>
+
+  <div *ngIf="isLoading" class="loading-shimmer">
+    <div class="shimmer-bar" *ngFor="let i of [1,2,3]"></div>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+    <!-- Progress bars summary -->
+    <section class="summary-card">
+      <div class="rate-row">
+        <div class="rate-item">
+          <div class="rate-header">
+            <span class="rate-label">Completion Rate</span>
+            <span class="rate-pct done-pct">{{ completionRate }}%</span>
+          </div>
+          <div class="track">
+            <div class="fill fill-done" [style.width.%]="completionRate"></div>
+          </div>
+        </div>
+        <div class="rate-item">
+          <div class="rate-header">
+            <span class="rate-label">In Progress Rate</span>
+            <span class="rate-pct progress-pct">{{ inProgressRate }}%</span>
+          </div>
+          <div class="track">
+            <div class="fill fill-progress" [style.width.%]="inProgressRate"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="count-row">
+        <div class="count-pill todo-pill">
+          <span class="count-num">{{ todoTasks.length }}</span>
+          <span class="count-lbl">To Do</span>
+        </div>
+        <div class="count-pill progress-pill">
+          <span class="count-num">{{ progressTasks.length }}</span>
+          <span class="count-lbl">In Progress</span>
+        </div>
+        <div class="count-pill done-pill">
+          <span class="count-num">{{ doneTasks.length }}</span>
+          <span class="count-lbl">Done</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kanban columns -->
+    <section class="kanban-grid">
+      <!-- To Do -->
+      <div class="kanban-col">
+        <div class="col-header todo-header">
+          <span class="col-dot todo-dot"></span>
+          <span class="col-title">To Do</span>
+          <span class="col-badge">{{ todoTasks.length }}</span>
+        </div>
+        <div class="col-body">
+          <div class="empty-col" *ngIf="todoTasks.length === 0">
+            <span>No tasks here 🎉</span>
+          </div>
+          <div class="kanban-card" *ngFor="let task of todoTasks">
+            <p class="k-title">{{ task.title }}</p>
+            <p class="k-desc" *ngIf="task.description">{{ task.description }}</p>
+            <span class="k-date">{{ formatDate(task.createdAt) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- In Progress -->
+      <div class="kanban-col">
+        <div class="col-header progress-header">
+          <span class="col-dot progress-dot"></span>
+          <span class="col-title">In Progress</span>
+          <span class="col-badge">{{ progressTasks.length }}</span>
+        </div>
+        <div class="col-body">
+          <div class="empty-col" *ngIf="progressTasks.length === 0">
+            <span>Nothing active yet</span>
+          </div>
+          <div class="kanban-card progress-card" *ngFor="let task of progressTasks">
+            <p class="k-title">{{ task.title }}</p>
+            <p class="k-desc" *ngIf="task.description">{{ task.description }}</p>
+            <span class="k-date">{{ formatDate(task.createdAt) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Done -->
+      <div class="kanban-col">
+        <div class="col-header done-header">
+          <span class="col-dot done-dot"></span>
+          <span class="col-title">Done</span>
+          <span class="col-badge">{{ doneTasks.length }}</span>
+        </div>
+        <div class="col-body">
+          <div class="empty-col" *ngIf="doneTasks.length === 0">
+            <span>Complete a task first</span>
+          </div>
+          <div class="kanban-card done-card" *ngFor="let task of doneTasks">
+            <p class="k-title done-title">{{ task.title }}</p>
+            <p class="k-desc" *ngIf="task.description">{{ task.description }}</p>
+            <span class="k-date">{{ formatDate(task.createdAt) }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ng-container>
+
+  <div class="empty-all" *ngIf="!isLoading && tasks.length === 0">
+    <p>You have no tasks yet.</p>
+    <a routerLink="/tasks" class="btn-create">Create your first task →</a>
+  </div>
+</div>

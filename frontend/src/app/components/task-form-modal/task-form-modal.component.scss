@@ -164,3 +164,16 @@
   font-size: 0.75rem;
   color: var(--on-surface-variant);
 }
+
+.char-count {
+  display: block;
+  font-size: 0.72rem;
+  color: #aaa;
+  text-align: right;
+  margin-top: 0.2rem;
+}
+
+.btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

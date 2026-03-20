@@ -82,6 +82,7 @@ public class TaskServiceImpl implements TaskService {
                 .description(task.getDescription())
                 .status(task.getStatus())
                 .createdAt(task.getCreatedAt())
+                .updatedAt(task.getUpdatedAt())
                 .build();
     }
 }

@@ -8,9 +8,12 @@
   </div>
 
   <nav class="nav-links">
-    <a *ngFor="let item of navItems"
-       class="nav-item"
-       [class.active]="item.active">
+    <a
+      *ngFor="let item of navItems"
+      class="nav-item"
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }">
       <span class="nav-icon">{{ item.icon }}</span>
       <span class="nav-label">{{ item.label }}</span>
     </a>
