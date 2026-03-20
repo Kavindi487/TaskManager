@@ -1,19 +1,25 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { TasksPageComponent } from './pages/tasks-page/tasks-page.component';
-import { TaskStatus } from './models/task-status';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent, NavbarComponent, TasksPageComponent],
+  imports: [RouterOutlet, CommonModule, SidebarComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
-  title = 'TaskManager';
-  showForm = false;
-  filterStatus: TaskStatus | null = null;
+  showShell = false;
+
+  constructor(private router: Router) {
+    this.router.events
+      .pipe(filter(e => e instanceof NavigationEnd))
+      .subscribe((e: any) => {
+        const url: string = e.urlAfterRedirects;
+        this.showShell = !url.includes('/login') && !url.includes('/signup');
+      });
+  }
 }
