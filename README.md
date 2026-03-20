@@ -31,8 +31,5 @@ Simple task manager application in java with springboot and angular
 ## API Base URL
 http://localhost:8080/api/tasks
 
-## Screenshots
-(Add screenshots here)
-
 ## Author
 Kavindi487
