@@ -44,8 +44,13 @@ export class TasksPageComponent implements OnInit {
     });
   }
 
-  onFilterChange(status: TaskStatus | null) {
-    this.selectedFilter = status;
+  //properly cast the string value to TaskStatus enum
+  onFilterChange(value: string | null) {
+    if (!value) {
+      this.selectedFilter = null;
+    } else {
+      this.selectedFilter = value as TaskStatus;
+    }
     this.loadTasks();
   }
 
