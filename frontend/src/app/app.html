@@ -1,0 +1,12 @@
+<ng-container *ngIf="showShell; else authPage">
+  <div class="app-shell">
+    <app-sidebar></app-sidebar>
+    <div class="main-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #authPage>
+  <router-outlet></router-outlet>
+</ng-template>

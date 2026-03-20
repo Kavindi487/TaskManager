@@ -1,0 +1,15 @@
+<div class="task-list">
+  <div class="list-header">
+    <span class="col-details">Task</span>
+    <span class="col-status">Status</span>
+    <span class="col-date">Created</span>
+    <span class="col-actions">Actions</span>
+  </div>
+
+  <app-task-card
+    *ngFor="let task of tasks"
+    [task]="task"
+    (edit)="editTask.emit($event)"
+    (delete)="deleteTask.emit($event)">
+  </app-task-card>
+</div>

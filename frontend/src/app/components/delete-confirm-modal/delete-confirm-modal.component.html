@@ -1,0 +1,18 @@
+<div class="modal-backdrop" (click)="cancel.emit()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-icon">⚠</div>
+    <h3 class="modal-title">Delete Task?</h3>
+    <p class="modal-body">
+      Are you sure you want to delete this task? This action cannot be undone.
+      All associated notes and sub-tasks will be permanently removed.
+    </p>
+    <div class="task-preview">
+      <span class="task-preview-icon">📄</span>
+      <span class="task-preview-title">{{ task?.title }}</span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-delete" (click)="confirm.emit()">Delete</button>
+      <button class="btn-cancel" (click)="cancel.emit()">Cancel</button>
+    </div>
+  </div>
+</div>

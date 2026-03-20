@@ -7,7 +7,6 @@ import lombok.Data;
 
 @Data
 public class TaskRequest {
-
     @NotBlank(message = "Title is required")
     @Size(max = 150, message = "Title must not exceed 150 characters")
     private String title;

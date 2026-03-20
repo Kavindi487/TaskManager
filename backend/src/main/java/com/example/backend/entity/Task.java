@@ -31,6 +31,10 @@ public class Task {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private AppUser owner;
+
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();

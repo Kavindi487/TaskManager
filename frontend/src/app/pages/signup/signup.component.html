@@ -1,0 +1,60 @@
+<div class="auth-page">
+  <nav class="auth-nav">
+    <span class="nav-brand">TaskManager</span>
+    <div class="nav-right">
+      <a routerLink="/login" class="nav-link">Sign In</a>
+      <span class="nav-help">?</span>
+    </div>
+  </nav>
+
+  <div class="auth-card">
+    <h2 class="card-title">Create your workspace</h2>
+    <p class="card-subtitle">Join the ecosystem of high-performance architects.</p>
+
+    <div class="form-group">
+      <label class="form-label">FULL NAME</label>
+      <input class="form-input" type="text" [(ngModel)]="name" placeholder="Alexander Hamilton" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">EMAIL ADDRESS</label>
+      <input class="form-input" type="email" [(ngModel)]="email" placeholder="alex@executive.com" />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">PASSWORD</label>
+        <input class="form-input" type="password" [(ngModel)]="password" placeholder="••••••••" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">CONFIRM</label>
+        <input class="form-input" type="password" [(ngModel)]="confirm" placeholder="••••••••" />
+      </div>
+    </div>
+
+    <p class="error-msg" *ngIf="error">{{ error }}</p>
+
+    <button class="btn-primary" (click)="submit()">Sign Up</button>
+
+    <p class="auth-switch">
+      Already have an account?
+      <a routerLink="/login" class="auth-link">Log in instead</a>
+    </p>
+  </div>
+
+  <p class="terms-note">
+    BY CONTINUING, YOU AGREE TO THE TASKMANAGER<br />
+    <a href="#">TERMS OF SERVICE</a> & <a href="#">PRIVACY POLICY</a>
+  </p>
+
+  <footer class="auth-footer">
+    <span class="footer-brand">TaskManager</span>
+    <span>© 2024 TaskManager. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Security</a>
+      <a href="#">Contact Support</a>
+    </div>
+  </footer>
+</div>

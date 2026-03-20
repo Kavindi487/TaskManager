@@ -1,38 +1,71 @@
-# TaskManager
-Simple task manager application in java with springboot and angular
-
 # Task Manager App
 
-## Tech Stack
-- Angular
-- Spring Boot
-- MySQL
+A full-stack Task Manager application built with Angular, Spring Boot, MySQL, JWT authentication, Docker, and GitHub Actions.
 
 ## Features
-- Create task
-- View all tasks
-- Update task
-- Delete task
-- Filter tasks by status
-- Form validation
+- User signup and login with JWT authentication
+- Create, read, update, and delete tasks
+- Filter tasks by status: To Do, In Progress, Done
+- Clean responsive dashboard UI
+- Dockerized frontend, backend, and MySQL database
+- GitHub Actions CI for backend and frontend builds
 
-## Backend Setup
-1. Create MySQL database:
-   CREATE DATABASE task_manager_db;
-2. Update application.properties with MySQL username and password
-3. Run:
-   mvn spring-boot:run
+## Tech Stack
+- Frontend: Angular 21
+- Backend: Spring Boot 3, Spring Security, JPA
+- Database: MySQL 8
+- Auth: JWT
+- DevOps: Docker Compose, GitHub Actions
 
-## Frontend Setup
-1. Run:
-   npm install
-   ng serve
+## Local Development
 
-## API Base URL
-http://localhost:8080/api/tasks
+### Backend
+```bash
+cd backend
+mvn spring-boot:run
+```
 
-## Screenshots
-(Add screenshots here)
+### Frontend
+```bash
+cd frontend
+npm install
+npm start
+```
 
-## Author
-Kavindi487
+Frontend runs on `http://localhost:4200` and proxies `/api` requests to the backend on `http://localhost:8080`.
+
+## Default Local Database
+- Database: `task_manager_db`
+- Username: `root`
+- Password: `123456789`
+
+Update these values in `backend/src/main/resources/application.properties` if needed.
+
+## Docker
+Run everything with:
+```bash
+docker compose up --build
+```
+
+Services:
+- Frontend: `http://localhost:4200`
+- Backend: `http://localhost:8080`
+- MySQL: `localhost:3306`
+
+## Authentication API
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+
+## Task API
+Requires `Authorization: Bearer <token>`
+- `GET /api/tasks`
+- `POST /api/tasks`
+- `PUT /api/tasks/{id}`
+- `DELETE /api/tasks/{id}`
+
+## Suggested Git Commits
+1. setup backend CRUD
+2. add angular dashboard UI
+3. add JWT authentication
+4. dockerize application
+5. add GitHub Actions CI
