@@ -31,7 +31,8 @@ public class Task {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
+    // nullable=true so existing rows with NULL don't crash — data.sql backfills them on startup
+    @Column(nullable = true)
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -12,6 +12,7 @@ import com.example.backend.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -76,13 +77,18 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private TaskResponse mapToResponse(Task task) {
+        // Safely handle legacy rows where updatedAt may be null after migration
+        LocalDateTime updatedAt = task.getUpdatedAt() != null
+                ? task.getUpdatedAt()
+                : (task.getCreatedAt() != null ? task.getCreatedAt() : LocalDateTime.now());
+
         return TaskResponse.builder()
                 .id(task.getId())
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .status(task.getStatus())
                 .createdAt(task.getCreatedAt())
-                .updatedAt(task.getUpdatedAt())
+                .updatedAt(updatedAt)
                 .build();
     }
 }

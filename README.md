@@ -1,6 +1,6 @@
 # Task Manager App
 
-A full-stack Task Manager application built with **Angular 19**, **Spring Boot 3**, **MySQL 8**, **JWT authentication**, **Docker Compose**, and **GitHub Actions CI/CD**.
+A full-stack Task Manager built with **Angular 19**, **Spring Boot 3**, **MySQL 8**, **JWT Authentication**, **Docker Compose**, and **GitHub Actions CI/CD**.
 
 ---
 
@@ -9,85 +9,114 @@ A full-stack Task Manager application built with **Angular 19**, **Spring Boot 3
 | Feature | Details |
 |---|---|
 | ✅ JWT Authentication | Secure register / login with BCrypt + JJWT |
-| ✅ Full CRUD | Create, read, update, delete tasks via REST API |
-| ✅ Status Filtering | Filter tasks by To Do / In Progress / Done |
-| ✅ Reactive Forms | Angular `FormBuilder` + `Validators` throughout |
-| ✅ Optimistic UI | Instant feedback on edit/delete without waiting for API |
-| ✅ Kanban View | Progress page shows tasks in 3-column board |
-| ✅ Overview Dashboard | Stats, completion rate, recent tasks at a glance |
+| ✅ Full CRUD | Create, read, update, delete tasks |
+| ✅ Status Filtering | Filter by To Do / In Progress / Done |
+| ✅ Reactive Forms | Angular FormBuilder + Validators throughout |
+| ✅ Optimistic UI | Instant feedback on edit/delete |
+| ✅ Kanban Board | Progress page with 3-column task board |
+| ✅ Overview Dashboard | Stats, completion rate, recent tasks |
+| ✅ Skeleton Loaders | Shimmer placeholders while loading |
 | ✅ Docker Compose | One-command full-stack deployment |
-| ✅ GitHub Actions CI | Backend (Maven) + Frontend (npm) build checks |
-| ✅ Skeleton Loaders | Shimmer placeholders while data loads |
+| ✅ GitHub Actions CI | Automated backend + frontend build checks |
 
 ---
 
 ## Tech Stack
 
 - **Frontend**: Angular 19, TypeScript, SCSS, Reactive Forms
-- **Backend**: Spring Boot 3.3, Spring Security, Spring Data JPA
+- **Backend**: Spring Boot 3.3, Spring Security, Spring Data JPA, Lombok
 - **Database**: MySQL 8
-- **Auth**: JWT (JJWT 0.12.6), BCrypt
+- **Auth**: JWT (JJWT 0.12.6), BCrypt password hashing
 - **DevOps**: Docker, Docker Compose, GitHub Actions
 
 ---
 
-## Local Development
+## Option A — Run with Docker (Recommended)
+
+### Prerequisites
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running
+
+### Steps
+
+**1. Open a terminal in the project root** (where `docker-compose.yml` is):
+```
+cd TaskManager
+```
+
+**2. Build and start all services:**
+```bash
+docker compose up --build
+```
+This starts MySQL, the Spring Boot backend, and the Angular frontend all at once.
+First build takes ~3–5 minutes (downloads dependencies). Subsequent builds are faster.
+
+**3. Open the app:**
+
+| Service  | URL |
+|---|---|
+| Frontend | http://localhost:4200 |
+| Backend API | http://localhost:8080 |
+| MySQL | localhost:3306 |
+
+**4. To stop:**
+```bash
+docker compose down
+```
+
+**To stop and wipe the database too:**
+```bash
+docker compose down -v
+```
+
+---
+
+## Option B — Run Locally (Without Docker)
 
 ### Prerequisites
 - Java 17+
 - Node 20+
 - MySQL 8 running locally
 
-### Backend
+### Step 1 — Set up the database
+
+Open MySQL and run:
+```sql
+CREATE DATABASE IF NOT EXISTS task_manager_db;
+```
+
+Default credentials expected by the app:
+- Host: `localhost:3306`
+- Database: `task_manager_db`
+- Username: `root`
+- Password: `123456789`
+
+To use different credentials, edit `backend/src/main/resources/application.properties`.
+
+### Step 2 — Start the backend
 ```bash
 cd backend
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
-Backend starts on `http://localhost:8080`
+Backend starts at http://localhost:8080. Spring will create all tables automatically.
 
-### Frontend
+### Step 3 — Start the frontend
 ```bash
 cd frontend
 npm install
-npm start
+ng serve
 ```
-Frontend starts on `http://localhost:4200` and proxies `/api` to `http://localhost:8080`.
+Frontend starts at http://localhost:4200 and proxies `/api` calls to the backend.
 
 ---
 
-## Database Setup (Local)
+## Test Credentials
 
-Create the database (Spring will create tables automatically):
+Register a new account at http://localhost:4200/signup, or use these after registering once:
 
-```sql
-CREATE DATABASE task_manager_db;
-```
-
-Default credentials in `backend/src/main/resources/application.properties`:
-- **Host**: `localhost:3306`
-- **Database**: `task_manager_db`
-- **Username**: `root`
-- **Password**: `123456789`
-
-Update these values if your local MySQL uses different credentials.
-
----
-
-## Docker (Full Stack)
-
-Run everything with a single command:
-
-```bash
-docker compose up --build
-```
-
-| Service | URL |
-|---|---|
-| Frontend | http://localhost:4200 |
-| Backend API | http://localhost:8080 |
-| MySQL | localhost:3306 |
-
-The MySQL container includes a health check — the backend waits for the database to be fully ready before starting.
+| Field    | Value                |
+|----------|----------------------|
+| Email    | test@taskmanager.com |
+| Password | test123              |
 
 ---
 
@@ -95,16 +124,23 @@ The MySQL container includes a health check — the backend waits for the databa
 
 | Method | Endpoint | Body |
 |---|---|---|
-| POST | `/api/auth/register` | `{ name, email, password }` |
-| POST | `/api/auth/login` | `{ email, password }` |
+| POST | `/api/auth/register` | `{ "name", "email", "password" }` |
+| POST | `/api/auth/login` | `{ "email", "password" }` |
 
-Both return: `{ token, id, name, email }`
+Both return: `{ "token", "id", "name", "email" }`
+
+## JWT Info
+
+- Tokens expire after **24 hours**
+- Stored in browser `localStorage` under key `tm_token`
+- Automatically attached to all API requests via Angular HTTP interceptor
+- Secret key is configured via environment variable `APP_JWT_SECRET`
 
 ---
 
 ## Task API
 
-All task endpoints require `Authorization: Bearer <token>` header.
+All endpoints require: `Authorization: Bearer <token>`
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -119,50 +155,36 @@ All task endpoints require `Authorization: Bearer <token>` header.
 ## Project Structure
 
 ```
+TaskManager/
 ├── backend/
+│   ├── Dockerfile
 │   └── src/main/java/com/example/backend/
-│       ├── config/          # CORS, Security config
-│       ├── controller/      # REST controllers
-│       ├── dto/             # Request/Response DTOs
-│       ├── entity/          # JPA entities
+│       ├── config/          # CORS + Security configuration
+│       ├── controller/      # REST controllers (Auth, Task)
+│       ├── dto/             # Request & Response DTOs
+│       ├── entity/          # JPA entities (Task, AppUser)
 │       ├── exception/       # Global exception handler
-│       ├── repository/      # Spring Data repositories
-│       ├── security/        # JWT filter + service
+│       ├── repository/      # Spring Data JPA repositories
+│       ├── security/        # JWT filter + JWT service
 │       └── service/         # Business logic (interface + impl)
 ├── frontend/
+│   ├── Dockerfile
+│   ├── nginx.conf           # Proxies /api to backend in Docker
 │   └── src/app/
 │       ├── components/      # Reusable UI components
-│       ├── guards/          # Auth guard
+│       ├── guards/          # Route auth guard
 │       ├── interceptors/    # JWT HTTP interceptor
 │       ├── models/          # TypeScript interfaces
-│       ├── pages/           # Route-level components
-│       └── services/        # HTTP services
+│       ├── pages/           # Route pages (login, signup, tasks, overview, progress)
+│       └── services/        # HTTP services (Auth, Task)
 ├── docker-compose.yml
-└── .github/workflows/ci.yml
+└── .github/workflows/ci.yml # GitHub Actions CI
 ```
 
 ---
 
 ## CI/CD
 
-GitHub Actions runs on every push/PR to `main`:
-- **Backend job**: `mvn clean verify` with JDK 17
-- **Frontend job**: `npm ci && npm run build`
-
-
-## Test Credentials
-
-Register a new account at `http://localhost:4200/signup` or use these pre-created credentials (after running the app once and registering):
-
-| Field    | Value                      |
-|----------|----------------------------|
-| Email    | test@taskmanager.com       |
-| Password | test123                    |
-
-> If the above account doesn't exist yet, register it manually on first run — the app auto-creates the database tables on startup.
-
-## JWT Info
-
-- Tokens are valid for **24 hours** (configured via `APP_JWT_EXPIRATION_MS=86400000`)
-- The token is stored in `localStorage` under the key `tm_token`
-- All `/api/tasks` endpoints require `Authorization: Bearer <token>` — handled automatically by the Angular interceptor
+GitHub Actions runs on every push to `main`:
+- **Backend**: `mvn clean verify` with JDK 17
+- **Frontend**: `npm ci && npm run build`
