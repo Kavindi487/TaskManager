@@ -1,20 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
-// Design tokens from the spec
 :root {
-  --surface:                #f8f9fa;
-  --surface-container:      #edeeef;
-  --surface-container-low:  #f3f4f5;
+  --surface:                  #f8f9fa;
+  --surface-container:        #edeeef;
+  --surface-container-low:    #f3f4f5;
   --surface-container-lowest: #ffffff;
-  --surface-container-high: #e7e8e9;
-  --primary:                #000666;
-  --primary-container:      #1a237e;
-  --on-surface:             #191c1d;
-  --on-surface-variant:     #454652;
-  --tertiary-container:     #003731;
-  --tertiary-fixed:         #8df5e4;
-  --secondary-container:    #cfe6f2;
-  --on-secondary-container: #526772;
-  --shadow:                 0px 8px 24px rgba(25, 28, 29, 0.06);
+  --surface-container-high:   #e7e8e9;
+  --primary:                  #000666;
+  --primary-container:        #1a237e;
+  --on-surface:               #191c1d;
+  --on-surface-variant:       #454652;
+  --tertiary-container:       #003731;
+  --tertiary-fixed:           #8df5e4;
+  --secondary-container:      #cfe6f2;
+  --on-secondary-container:   #526772;
+  --shadow:                   0px 8px 24px rgba(25, 28, 29, 0.06);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }

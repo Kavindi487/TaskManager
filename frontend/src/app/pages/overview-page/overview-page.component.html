@@ -1,0 +1,81 @@
+<div class="overview-page">
+  <header class="page-header">
+    <div>
+      <h1 class="page-title">Overview</h1>
+      <p class="page-subtitle">Your workspace at a glance, {{ firstName }}.</p>
+    </div>
+    <a routerLink="/tasks" class="btn-goto-tasks">+ Add Task</a>
+  </header>
+
+  <div *ngIf="isLoading" class="skeleton-grid">
+    <div class="skeleton-card" *ngFor="let i of [1,2,3,4]"></div>
+  </div>
+
+  <section class="stats-grid" *ngIf="!isLoading">
+    <article class="stat-card stat-total">
+      <div class="stat-icon">📋</div>
+      <div class="stat-body">
+        <span class="stat-label">Total Tasks</span>
+        <strong class="stat-value">{{ totalCount }}</strong>
+      </div>
+    </article>
+    <article class="stat-card stat-todo">
+      <div class="stat-icon">🕐</div>
+      <div class="stat-body">
+        <span class="stat-label">To Do</span>
+        <strong class="stat-value">{{ todoCount }}</strong>
+      </div>
+    </article>
+    <article class="stat-card stat-progress">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-body">
+        <span class="stat-label">In Progress</span>
+        <strong class="stat-value">{{ progressCount }}</strong>
+      </div>
+    </article>
+    <article class="stat-card stat-done">
+      <div class="stat-icon">✅</div>
+      <div class="stat-body">
+        <span class="stat-label">Completed</span>
+        <strong class="stat-value">{{ doneCount }}</strong>
+      </div>
+    </article>
+  </section>
+
+  <section class="completion-section" *ngIf="!isLoading && totalCount > 0">
+    <div class="completion-card">
+      <div class="completion-header">
+        <span class="completion-label">Overall Completion</span>
+        <span class="completion-pct">{{ completionRate }}%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" [style.width.%]="completionRate"></div>
+      </div>
+      <p class="completion-sub">{{ doneCount }} of {{ totalCount }} tasks completed</p>
+    </div>
+  </section>
+
+  <section class="recent-section" *ngIf="!isLoading">
+    <div class="section-header">
+      <h2 class="section-title">Recent Tasks</h2>
+      <a routerLink="/tasks" class="view-all-link">View all →</a>
+    </div>
+
+    <div class="empty-recent" *ngIf="recentTasks.length === 0">
+      <p>No tasks yet. <a routerLink="/tasks">Create your first task →</a></p>
+    </div>
+
+    <div class="recent-list" *ngIf="recentTasks.length > 0">
+      <div class="recent-item" *ngFor="let task of recentTasks">
+        <div class="recent-left">
+          <span class="recent-dot" [ngClass]="statusClass(task.status)"></span>
+          <div>
+            <p class="recent-title" [class.done-title]="task.status === 'DONE'">{{ task.title }}</p>
+            <p class="recent-date">{{ formatDate(task.createdAt) }}</p>
+          </div>
+        </div>
+        <span class="status-chip" [ngClass]="statusClass(task.status)">{{ statusLabel(task.status) }}</span>
+      </div>
+    </div>
+  </section>
+</div>

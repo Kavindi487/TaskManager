@@ -1,0 +1,81 @@
+<div class="auth-page">
+  <nav class="auth-nav">
+    <span class="nav-brand">TaskManager</span>
+    <div class="nav-right">
+      <a routerLink="/login" class="nav-link">Sign In</a>
+    </div>
+  </nav>
+
+  <div class="auth-card" [formGroup]="signupForm">
+    <h2 class="card-title">Create your workspace</h2>
+    <p class="card-subtitle">Join the ecosystem of high-performance architects.</p>
+
+    <div class="form-group">
+      <label class="form-label">FULL NAME</label>
+      <div class="input-wrapper" [class.input-error]="nameCtrl.invalid && nameCtrl.touched">
+        <input class="form-input" type="text" formControlName="name" placeholder="Alexander Hamilton" />
+      </div>
+      <span class="field-error" *ngIf="nameCtrl.invalid && nameCtrl.touched">
+        {{ nameCtrl.hasError('required') ? 'Name is required' : 'Name must be at least 2 characters' }}
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">EMAIL ADDRESS</label>
+      <div class="input-wrapper" [class.input-error]="emailCtrl.invalid && emailCtrl.touched">
+        <input class="form-input" type="email" formControlName="email" placeholder="alex@executive.com" />
+      </div>
+      <span class="field-error" *ngIf="emailCtrl.invalid && emailCtrl.touched">
+        {{ emailCtrl.hasError('required') ? 'Email is required' : 'Enter a valid email address' }}
+      </span>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">PASSWORD</label>
+        <div class="input-wrapper" [class.input-error]="passwordCtrl.invalid && passwordCtrl.touched">
+          <input class="form-input" type="password" formControlName="password" placeholder="••••••••" />
+        </div>
+        <span class="field-error" *ngIf="passwordCtrl.invalid && passwordCtrl.touched">
+          Min 6 characters
+        </span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">CONFIRM</label>
+        <div class="input-wrapper" [class.input-error]="(confirmCtrl.touched || signupForm.touched) && signupForm.hasError('passwordMismatch')">
+          <input class="form-input" type="password" formControlName="confirm" placeholder="••••••••" />
+        </div>
+        <span class="field-error" *ngIf="(confirmCtrl.touched || signupForm.touched) && signupForm.hasError('passwordMismatch')">
+          Passwords do not match
+        </span>
+      </div>
+    </div>
+
+    <p class="error-msg" *ngIf="error">{{ error }}</p>
+
+    <button class="btn-primary" type="button" (click)="submit()" [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Creating account...' : 'Sign Up' }}
+    </button>
+
+    <p class="auth-switch">
+      Already have an account?
+      <a routerLink="/login" class="auth-link">Log in instead</a>
+    </p>
+  </div>
+
+  <p class="terms-note">
+    BY CONTINUING, YOU AGREE TO THE TASKMANAGER<br />
+    <a href="#">TERMS OF SERVICE</a> & <a href="#">PRIVACY POLICY</a>
+  </p>
+
+  <footer class="auth-footer">
+    <span class="footer-brand">TaskManager</span>
+    <span>© 2025 TaskManager. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Security</a>
+      <a href="#">Contact Support</a>
+    </div>
+  </footer>
+</div>

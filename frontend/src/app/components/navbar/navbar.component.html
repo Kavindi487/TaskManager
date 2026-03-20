@@ -1,3 +1,20 @@
-<nav class="navbar">
-  <span class="nav-title">My Tasks</span>
-</nav>
+<header class="navbar">
+  <div class="navbar-left">
+    <h1 class="page-title">My Tasks</h1>
+    <p class="page-subtitle">Track, update, and complete your work clearly.</p>
+  </div>
+
+  <div class="navbar-right">
+    <div class="filter-pills">
+      <button
+        *ngFor="let filter of filters"
+        class="filter-pill"
+        [class.active]="filter.value === selectedStatus"
+        (click)="selectStatus(filter.value)">
+        {{ filter.label }}
+      </button>
+    </div>
+
+    <button class="add-task-btn" (click)="addTask.emit()">+ Add Task</button>
+  </div>
+</header>

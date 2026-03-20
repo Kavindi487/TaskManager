@@ -1,3 +1,57 @@
 <div class="tasks-page">
-  <h1>My Tasks</h1>
+  <app-navbar (addTask)="openCreateModal()" (filterChange)="onFilterChange($event)"></app-navbar>
+
+  <section class="stats-grid">
+    <article class="stat-card">
+      <span class="stat-label">Total Tasks</span>
+      <strong class="stat-value">{{ totalCount }}</strong>
+    </article>
+    <article class="stat-card">
+      <span class="stat-label">To Do</span>
+      <strong class="stat-value">{{ todoCount }}</strong>
+    </article>
+    <article class="stat-card">
+      <span class="stat-label">In Progress</span>
+      <strong class="stat-value">{{ progressCount }}</strong>
+    </article>
+    <article class="stat-card">
+      <span class="stat-label">Done</span>
+      <strong class="stat-value">{{ doneCount }}</strong>
+    </article>
+  </section>
+
+  <div class="content-area">
+    <div *ngIf="errorMessage" class="page-error">{{ errorMessage }}</div>
+
+    <!-- Skeleton loader on first load only -->
+    <div *ngIf="isLoading && allTasks.length === 0" class="skeleton-list">
+      <div class="skeleton-row" *ngFor="let i of [1,2,3,4]"></div>
+    </div>
+
+    <app-empty-state
+      *ngIf="!isLoading && filteredTasks.length === 0"
+      (addTask)="openCreateModal()">
+    </app-empty-state>
+
+    <app-task-list
+      *ngIf="filteredTasks.length > 0"
+      [tasks]="filteredTasks"
+      (editTask)="openEditModal($event)"
+      (deleteTask)="openDeleteModal($event)">
+    </app-task-list>
+  </div>
 </div>
+
+<app-task-form-modal
+  *ngIf="showFormModal"
+  [task]="selectedTask"
+  (save)="onSaveTask($event)"
+  (cancel)="showFormModal = false">
+</app-task-form-modal>
+
+<app-delete-confirm-modal
+  *ngIf="showDeleteModal && taskToDelete"
+  [task]="taskToDelete!"
+  (confirm)="onConfirmDelete()"
+  (cancel)="showDeleteModal = false">
+</app-delete-confirm-modal>

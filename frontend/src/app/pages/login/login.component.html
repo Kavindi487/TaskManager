@@ -1,0 +1,74 @@
+<div class="auth-page">
+  <div class="auth-top">
+    <h1 class="brand-name">TaskManager</h1>
+    <p class="brand-tagline">THE SILENT ARCHITECT OF PRODUCTIVITY</p>
+  </div>
+
+  <div class="auth-card" [formGroup]="loginForm">
+    <h2 class="card-title">Sign In</h2>
+    <p class="card-subtitle">Welcome back to your premium workspace.</p>
+
+    <div class="form-group">
+      <label class="form-label">EMAIL ADDRESS</label>
+      <div class="input-wrapper" [class.input-error]="emailCtrl.invalid && emailCtrl.touched">
+        <span class="input-icon">✉</span>
+        <input
+          class="form-input"
+          type="email"
+          formControlName="email"
+          placeholder="alex@executive.com" />
+      </div>
+      <span class="field-error" *ngIf="emailCtrl.invalid && emailCtrl.touched">
+        {{ emailCtrl.hasError('required') ? 'Email is required' : 'Enter a valid email address' }}
+      </span>
+    </div>
+
+    <div class="form-group">
+      <div class="label-row">
+        <label class="form-label">PASSWORD</label>
+        <a class="forgot-link" href="#">Forgot Password?</a>
+      </div>
+      <div class="input-wrapper" [class.input-error]="passwordCtrl.invalid && passwordCtrl.touched">
+        <span class="input-icon">🔒</span>
+        <input
+          class="form-input"
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+          placeholder="••••••••" />
+        <button class="toggle-pw" type="button" (click)="showPassword = !showPassword">
+          {{ showPassword ? '🙈' : '👁' }}
+        </button>
+      </div>
+      <span class="field-error" *ngIf="passwordCtrl.invalid && passwordCtrl.touched">
+        Password must be at least 6 characters
+      </span>
+    </div>
+
+    <p class="error-msg" *ngIf="error">{{ error }}</p>
+
+    <button class="btn-primary" type="button" (click)="submit()" [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Signing in...' : 'Sign In →' }}
+    </button>
+
+    <p class="auth-switch">
+      New to TaskManager?
+      <a routerLink="/signup" class="auth-link">Create an account</a>
+    </p>
+  </div>
+
+  <div class="security-badges">
+    <span>🛡 SECURE ACCESS</span>
+    <span>🛡 END-TO-END ENCRYPTION</span>
+  </div>
+
+  <footer class="auth-footer">
+    <span class="footer-brand">TaskManager</span>
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Security</a>
+      <a href="#">Contact Support</a>
+    </div>
+    <span>© 2025 TaskManager. All rights reserved.</span>
+  </footer>
+</div>
