@@ -4,7 +4,7 @@
   <section class="stats-grid">
     <article class="stat-card">
       <span class="stat-label">Total Tasks</span>
-      <strong class="stat-value">{{ tasks.length }}</strong>
+      <strong class="stat-value">{{ totalCount }}</strong>
     </article>
     <article class="stat-card">
       <span class="stat-label">To Do</span>
@@ -23,8 +23,8 @@
   <div class="content-area">
     <div *ngIf="errorMessage" class="page-error">{{ errorMessage }}</div>
 
-    <!-- Skeleton loader: shown on first load -->
-    <div *ngIf="isLoading && tasks.length === 0" class="skeleton-list">
+    <!-- Skeleton loader on first load only -->
+    <div *ngIf="isLoading && allTasks.length === 0" class="skeleton-list">
       <div class="skeleton-row" *ngFor="let i of [1,2,3,4]"></div>
     </div>
 

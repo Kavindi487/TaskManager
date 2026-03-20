@@ -2,7 +2,9 @@ import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'tasks', pathMatch: 'full' },
+  // Root goes to login — guard on tasks will redirect to login anyway,
+  // but starting here avoids any flash of the shell layout
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: 'login',
     loadComponent: () =>

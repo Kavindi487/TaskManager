@@ -25,8 +25,11 @@ import { NavbarComponent } from '../../components/navbar/navbar.component';
   styleUrl: './tasks-page.component.scss'
 })
 export class TasksPageComponent implements OnInit {
-  tasks: Task[] = [];
+  // allTasks always holds the FULL unfiltered list — used for stat counters
+  allTasks: Task[] = [];
+  // filteredTasks is what the list renders — may be a subset
   filteredTasks: Task[] = [];
+
   selectedFilter: TaskStatus | null = null;
   isLoading = false;
   errorMessage = '';
@@ -39,29 +42,24 @@ export class TasksPageComponent implements OnInit {
   constructor(private taskService: TaskService) {}
 
   ngOnInit() {
-    this.loadTasks();
+    this.loadAllTasks();
   }
 
-  get todoCount(): number {
-    return this.tasks.filter(t => t.status === TaskStatus.TO_DO).length;
-  }
+  // Stat counters always read from allTasks — never affected by filter
+  get totalCount():    number { return this.allTasks.length; }
+  get todoCount():     number { return this.allTasks.filter(t => t.status === TaskStatus.TO_DO).length; }
+  get progressCount(): number { return this.allTasks.filter(t => t.status === TaskStatus.IN_PROGRESS).length; }
+  get doneCount():     number { return this.allTasks.filter(t => t.status === TaskStatus.DONE).length; }
 
-  get progressCount(): number {
-    return this.tasks.filter(t => t.status === TaskStatus.IN_PROGRESS).length;
-  }
-
-  get doneCount(): number {
-    return this.tasks.filter(t => t.status === TaskStatus.DONE).length;
-  }
-
-  loadTasks() {
+  // Always fetch ALL tasks first, then apply filter client-side
+  loadAllTasks() {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.taskService.getAll(this.selectedFilter ?? undefined).subscribe({
+    this.taskService.getAll().subscribe({
       next: (tasks) => {
-        this.tasks = tasks;
-        this.filteredTasks = tasks;
+        this.allTasks = tasks;
+        this.applyFilter();
         this.isLoading = false;
       },
       error: (error: HttpErrorResponse) => {
@@ -71,15 +69,16 @@ export class TasksPageComponent implements OnInit {
     });
   }
 
+  // Apply the active filter to allTasks — no extra API call needed
+  applyFilter() {
+    this.filteredTasks = this.selectedFilter
+      ? this.allTasks.filter(t => t.status === this.selectedFilter)
+      : [...this.allTasks];
+  }
+
   onFilterChange(value: TaskStatus | null) {
     this.selectedFilter = value;
-    // Optimistic client-side filter while API loads
-    if (value === null) {
-      this.filteredTasks = this.tasks;
-    } else {
-      this.filteredTasks = this.tasks.filter(t => t.status === value);
-    }
-    this.loadTasks();
+    this.applyFilter(); // instant — no API call, just re-slice allTasks
   }
 
   openCreateModal() {
@@ -99,36 +98,32 @@ export class TasksPageComponent implements OnInit {
 
   onSaveTask(data: { title: string; description: string; status: TaskStatus }) {
     if (this.selectedTask) {
-      // Optimistic update
-      const idx = this.tasks.findIndex(t => t.id === this.selectedTask!.id);
-      if (idx !== -1) {
-        this.tasks[idx] = { ...this.tasks[idx], ...data };
-        this.filteredTasks = this.selectedFilter
-          ? this.tasks.filter(t => t.status === this.selectedFilter)
-          : [...this.tasks];
-      }
+      const editId = this.selectedTask.id;
       this.showFormModal = false;
 
-      this.taskService.update(this.selectedTask.id, data).subscribe({
+      // Optimistic update in allTasks
+      const idx = this.allTasks.findIndex(t => t.id === editId);
+      if (idx !== -1) {
+        this.allTasks[idx] = { ...this.allTasks[idx], ...data };
+        this.applyFilter();
+      }
+
+      this.taskService.update(editId, data).subscribe({
         next: (updated) => {
-          const i = this.tasks.findIndex(t => t.id === updated.id);
-          if (i !== -1) this.tasks[i] = updated;
-          this.filteredTasks = this.selectedFilter
-            ? this.tasks.filter(t => t.status === this.selectedFilter)
-            : [...this.tasks];
+          const i = this.allTasks.findIndex(t => t.id === updated.id);
+          if (i !== -1) this.allTasks[i] = updated;
+          this.applyFilter();
         },
         error: (error: HttpErrorResponse) => {
           this.errorMessage = error.error?.message || 'Failed to update task.';
-          this.loadTasks(); // rollback
+          this.loadAllTasks(); // rollback
         }
       });
     } else {
       this.taskService.create(data).subscribe({
         next: (created) => {
-          this.tasks.unshift(created);
-          this.filteredTasks = this.selectedFilter
-            ? this.tasks.filter(t => t.status === this.selectedFilter)
-            : [...this.tasks];
+          this.allTasks.unshift(created);
+          this.applyFilter();
           this.showFormModal = false;
         },
         error: (error: HttpErrorResponse) => {
@@ -142,16 +137,16 @@ export class TasksPageComponent implements OnInit {
     if (!this.taskToDelete) return;
     const id = this.taskToDelete.id;
 
-    // Optimistic delete
-    this.tasks = this.tasks.filter(t => t.id !== id);
-    this.filteredTasks = this.filteredTasks.filter(t => t.id !== id);
+    // Optimistic delete from both arrays
+    this.allTasks = this.allTasks.filter(t => t.id !== id);
+    this.applyFilter();
     this.showDeleteModal = false;
     this.taskToDelete = null;
 
     this.taskService.delete(id).subscribe({
       error: (error: HttpErrorResponse) => {
         this.errorMessage = error.error?.message || 'Failed to delete task.';
-        this.loadTasks(); // rollback
+        this.loadAllTasks(); // rollback
       }
     });
   }
