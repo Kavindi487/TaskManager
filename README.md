@@ -188,3 +188,6 @@ TaskManager/
 GitHub Actions runs on every push to `main`:
 - **Backend**: `mvn clean verify` with JDK 17
 - **Frontend**: `npm ci && npm run build`
+
+
+<img width="1919" height="960" alt="Screenshot 2026-03-20 214029" src="https://github.com/user-attachments/assets/7e12f9d1-63d9-43b4-9aca-063384822aeb" />
